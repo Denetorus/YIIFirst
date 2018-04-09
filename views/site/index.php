@@ -10,6 +10,11 @@ $this->title = 'My Yii Application';
         <h1>Redirect on my first page in YII2</h1>
         <a class="btn btn-default" href="index.php?r=first">PRESS ME</a>
     </div>
+    <div>
+        <h1>Redirect on my second page in YII2</h1>
+        <a class="btn btn-default" href="index.php?r=second">PRESS ME</a>
+    </div>
+
     <div class="jumbotron">
         <h1>Congratulations!</h1>
 
