@@ -1,6 +1,8 @@
 <?php
 
 namespace app\models;
+use app\models\Users;
+use yii\db\Query;
 
 class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 {
@@ -33,7 +35,13 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        $model = new Query();
+        $res = $model->select(['id', 'login username', 'password'])
+            ->from("users")
+            ->where("id = ".$id)
+            ->one();
+
+        return isset($res) ? new static($res) : null;
     }
 
     /**
@@ -58,13 +66,15 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
 
-        return null;
+        $model = new Query();
+        $res = $model->select(['id', 'login username', 'password'])
+            ->from("users")
+            ->where("login = '".$username."'")
+            ->one();
+
+        return isset($res) ? new static($res) : null;
+
     }
 
     /**
@@ -99,6 +109,6 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return $this->password === md5($password);
     }
 }

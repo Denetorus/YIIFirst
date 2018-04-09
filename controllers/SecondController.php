@@ -10,6 +10,7 @@ namespace app\controllers;
 
 
 use app\models\Users;
+use yii\db\Query;
 use yii\web\Controller;
 
 class SecondController extends Controller
@@ -33,7 +34,7 @@ class SecondController extends Controller
 
         $model = new Users();
         $model->login = $_GET['login'];
-        $model->password = $_GET['password'];
+        $model->password = md5($_GET['password']);
         $model->save();
 
         return "";
