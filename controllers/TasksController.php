@@ -56,7 +56,8 @@ class TasksController extends Controller
 
         $dataProvider = $searchModel->search($params);
         $dataProvider->query
-            ->andFilterWhere(['>=', 'date',  date("Y-m-01")]);
+            ->andFilterWhere(['>=', 'date',  date("Y-m-01")])
+            ->andFilterWhere(['<=', 'date',  date("Y-m-t")]);
 
         return $this->render('current', [
             'searchModel' => $searchModel,
