@@ -65,8 +65,10 @@ class TasksSearch extends Tasks
         ]);
 
         $query->andFilterWhere(['ilike', 'name', $this->name])
-            ->andFilterWhere(['ilike', 'description', $this->description]);
+            ->andFilterWhere(['ilike', 'description', $this->description])
+        ;
 
         return $dataProvider;
     }
+
 }

@@ -8,6 +8,7 @@ use app\models\TasksSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\User;
 
 /**
  * TasksController implements the CRUD actions for Tasks model.
@@ -36,6 +37,7 @@ class TasksController extends Controller
     public function actionIndex()
     {
         $searchModel = new TasksSearch();
+        var_dump(Yii::$app->request->queryParams);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -44,6 +46,23 @@ class TasksController extends Controller
         ]);
     }
 
+    public function actionCurrent(){
+
+        $searchModel = new TasksSearch();
+        $params = [
+                    'TasksSearch' => ['user_id' => Yii::$app->user->id],
+                    'r'=>'tasks'
+                  ];
+
+        $dataProvider = $searchModel->search($params);
+        $dataProvider->query
+            ->andFilterWhere(['>=', 'date',  date("Y-m-01")]);
+
+        return $this->render('current', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
     /**
      * Displays a single Tasks model.
      * @param integer $id
