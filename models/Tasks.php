@@ -1,7 +1,9 @@
 <?php
 
 namespace app\models;
-
+use yii\db\Expression;
+use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
 use Yii;
 
 /**
@@ -18,6 +20,17 @@ use Yii;
 class Tasks extends \yii\db\ActiveRecord
 {
 
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
     /**
      * @inheritdoc
      */
@@ -33,7 +46,7 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'date', 'user_id'], 'required'],
-            [['date'], 'safe'],
+            [['date', 'created_at', 'updated_at'], 'safe'],
             [['user_id'], 'default', 'value' => null],
             [['user_id'], 'integer'],
             [['description'], 'string'],
