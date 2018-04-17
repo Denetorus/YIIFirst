@@ -17,6 +17,7 @@ use Yii;
  */
 class Tasks extends \yii\db\ActiveRecord
 {
+    public static $EVENT_CREATE_AFTER;
     /**
      * @inheritdoc
      */
@@ -61,5 +62,13 @@ class Tasks extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
+    }
+
+    public function UserSave(){
+        $handler = new \app\models\TasksRegisterEvent([
+            'user_id' => $this->user_id,
+        ]);
+        $this->trigger(static::$EVENT_CREATE_AFTER, $handler);
+        return $this->save();
     }
 }

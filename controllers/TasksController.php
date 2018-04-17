@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\Letters;
 use Yii;
 use app\models\Tasks;
 use app\models\TasksSearch;
+use yii\base\Event;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -97,7 +99,16 @@ class TasksController extends Controller
     {
         $model = new Tasks();
 
+        $model->on(Tasks::EVENT_AFTER_INSERT, function ($event){
+            $Lt = new Letters();
+            $Lt->text = 'new task '.$event->sender->name;
+            $Lt->user_id = $event->sender->user_id;
+            $Lt->save();
+        });
+
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
