@@ -37,7 +37,6 @@ class TasksController extends Controller
     public function actionIndex()
     {
         $searchModel = new TasksSearch();
-        var_dump(Yii::$app->request->queryParams);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,6 +47,17 @@ class TasksController extends Controller
 
     public function actionCurrent(){
 
+        $CurrentDate = Yii::$app->request->queryParams['date'];
+        if (!$CurrentDate){
+            $CurrentDate = date("Y-M-d");
+            $DateBegin = date("Y-M-01");
+            $DateEnd = date("Y-M-t");
+        }else{
+            $CurrentDate = strtotime($CurrentDate);
+            $DateBegin = date("Y-M-01", $CurrentDate);
+            $DateEnd = date("Y-M-t", $CurrentDate);
+
+        }
         $searchModel = new TasksSearch();
         $params = [
                     'TasksSearch' => ['user_id' => Yii::$app->user->id],
@@ -56,12 +66,13 @@ class TasksController extends Controller
 
         $dataProvider = $searchModel->search($params);
         $dataProvider->query
-            ->andFilterWhere(['>=', 'date',  date("Y-m-01")])
-            ->andFilterWhere(['<=', 'date',  date("Y-m-t")]);
+            ->andFilterWhere(['>=', 'date',  $DateBegin])
+            ->andFilterWhere(['<=', 'date',  $DateEnd]);
 
         return $this->render('current', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'currentDate' => $CurrentDate,
         ]);
     }
     /**
