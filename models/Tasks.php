@@ -17,7 +17,7 @@ use Yii;
  */
 class Tasks extends \yii\db\ActiveRecord
 {
-    public static $EVENT_CREATE_AFTER;
+
     /**
      * @inheritdoc
      */

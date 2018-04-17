@@ -7,6 +7,7 @@ use Yii;
 use app\models\Tasks;
 use app\models\TasksSearch;
 use yii\base\Event;
+use yii\behaviors\TimestampBehavior;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -29,6 +30,9 @@ class TasksController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'TimestampBehavior' => [
+                'class' => TimestampBehavior::class
+            ]
         ];
     }
 
@@ -49,13 +53,13 @@ class TasksController extends Controller
 
     public function actionCurrent(){
 
-        $CurrentDate = Yii::$app->request->queryParams['date'];
-        if (!$CurrentDate){
+
+        if (!isset(Yii::$app->request->queryParams['date'])){
             $CurrentDate = date("Y-M-d");
             $DateBegin = date("Y-M-01");
             $DateEnd = date("Y-M-t");
         }else{
-            $CurrentDate = strtotime($CurrentDate);
+            $CurrentDate = strtotime(Yii::$app->request->queryParams['date']);
             $DateBegin = date("Y-M-01", $CurrentDate);
             $DateEnd = date("Y-M-t", $CurrentDate);
 
