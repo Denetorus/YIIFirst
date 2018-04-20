@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?php
-$key = "task_site_contact";
+$key = "site_contact";
 if ($this->beginCache($key,[
         'duration' => 100,
         'variations' => [YII::$app->language],
