@@ -58,22 +58,41 @@ class TasksController extends Controller
             $DateEnd = date("Y-M-t", $CurrentDate);
 
         }
-        $searchModel = new TasksSearch();
-        $params = [
-                    'TasksSearch' => ['user_id' => Yii::$app->user->id],
-                    'r'=>'tasks'
-                  ];
 
-        $dataProvider = $searchModel->search($params);
-        $dataProvider->query
-            ->andFilterWhere(['>=', 'date',  $DateBegin])
-            ->andFilterWhere(['<=', 'date',  $DateEnd]);
+        $user_id = Yii::$app->user->id;
+        $cache = \yii::$app->cache;
+        $key = "taskCurrent_".$user_id.$DateBegin.$DateEnd;
 
-        return $this->render('current', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'currentDate' => $CurrentDate,
-        ]);
+        if($cache->exists($key)){
+
+            $model = $cache->get($key);
+
+        }else{
+
+            $searchModel = new TasksSearch();
+            $params = [
+                        'TasksSearch' => ['user_id' => $user_id],
+                        'r'=>'tasks'
+                      ];
+
+            $dataProvider = $searchModel->search($params);
+            $dataProvider->query
+                ->andFilterWhere(['>=', 'date',  $DateBegin])
+                ->andFilterWhere(['<=', 'date',  $DateEnd]);
+
+            $model = [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'currentDate' => $CurrentDate,
+            ];
+
+            $cache->set($key,$model,100);
+
+
+        }
+
+        //$model['currentDate'][] = $CurrentDate;
+        return $this->render('current', $model);
     }
     /**
      * Displays a single Tasks model.
