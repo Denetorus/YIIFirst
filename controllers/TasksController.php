@@ -9,6 +9,7 @@ use app\models\TasksSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * TasksController implements the CRUD actions for Tasks model.
@@ -146,7 +147,15 @@ class TasksController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if (Yii::$app->request->isPost){
+            $model->load(Yii::$app->request->post());
+            $model->file = UploadedFile::getInstance($model, 'file');
+
+            $fileName = $model->file->getBaseName().".".$model->file->getExtension();
+            $model->saveUploadedFile($fileName);
+            $model->file = $fileName;
+
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

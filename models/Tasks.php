@@ -5,6 +5,7 @@ use yii\db\Expression;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use Yii;
+use Yii\web\UploadedFile;
 
 /**
  * This is the model class for table "tasks".
@@ -14,11 +15,14 @@ use Yii;
  * @property string $date
  * @property int $user_id
  * @property string $description
- *
+ * @property string $file
  * @property Users $user
  */
 class Tasks extends \yii\db\ActiveRecord
 {
+
+    /** @var UploadedFile */
+    public $BinFile;
 
     public function behaviors()
     {
@@ -47,6 +51,7 @@ class Tasks extends \yii\db\ActiveRecord
         return [
             [['name', 'date', 'user_id'], 'required'],
             [['date', 'created_at', 'updated_at'], 'safe'],
+            [['file'], 'file', 'extensions' => 'jpg, bmp'],
             [['user_id'], 'default', 'value' => null],
             [['user_id'], 'integer'],
             [['description'], 'string'],
@@ -78,4 +83,11 @@ class Tasks extends \yii\db\ActiveRecord
     }
 
 
+    public function saveUploadedFile($FileName){
+
+        $path = \yii::getAlias('@webroot/img/');
+        $fullName = $path . $FileName;
+        $this->file->saveAs($fullName);
+
+    }
 }
