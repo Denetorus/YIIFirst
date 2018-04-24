@@ -6,6 +6,7 @@ use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use Yii;
 use Yii\web\UploadedFile;
+use yii\imagine\Image;
 
 /**
  * This is the model class for table "tasks".
@@ -85,9 +86,10 @@ class Tasks extends \yii\db\ActiveRecord
 
     public function saveUploadedFile($FileName){
 
-        $path = \yii::getAlias('@webroot/img/');
+        $path = yii::getAlias('@webroot/img/');
         $fullName = $path . $FileName;
         $this->file->saveAs($fullName);
+        Image::thumbnail($fullName, 100, 100)->save($path."small/".$FileName);
 
     }
 }
