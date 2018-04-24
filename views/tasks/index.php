@@ -30,8 +30,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'date',
             'user_id',
-            'description:ntext',
+            'description:text',
 
+            [
+                'attribute' => 'file',
+                'label' => 'image',
+                'content' => function ($data){
+                    $url = "/img/small/".$data->file;
+                    return Html::img($url,['alt'=>'myimage']);
+                }
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
