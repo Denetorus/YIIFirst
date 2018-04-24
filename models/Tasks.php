@@ -67,11 +67,12 @@ class Tasks extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'date' => 'Date',
-            'user_id' => 'User ID',
-            'description' => 'Description',
+            'id' => \Yii::t("msg", "ID"),
+            'name' => \Yii::t("msg", 'Name'),
+            'date' => \Yii::t("msg", 'Date'),
+            'user_id' => \Yii::t("msg", 'UserID'),
+            'description' => \Yii::t("msg", 'Description'),
+            'file' => \Yii::t("msg", 'File'),
         ];
     }
 
