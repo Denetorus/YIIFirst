@@ -103,8 +103,10 @@ class TasksController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $model->file = \yii::getAlias("/img/").$model->file;
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
