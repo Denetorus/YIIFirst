@@ -93,4 +93,27 @@ class Tasks extends \yii\db\ActiveRecord
         Image::thumbnail($fullName, 100, 100)->save($path."small/".$FileName);
 
     }
+
+    public static function SendReminder($countDays){
+
+        $CurrentDate = date("Y-M-d");
+        $DateEnd = date("d-m-Y", (time()+3600*24*$countDays));
+
+        $tasks = self::find()
+            ->andFilterWhere(['>=', 'date',  $CurrentDate])
+            ->andFilterWhere(['<=', 'date',  $DateEnd])->all();
+
+
+        foreach ($tasks as $task){
+            $Letter  = new Letters([
+                'user_id' => $task->user_id,
+                'text' => "Срок задачи ".$task->name." подходит к концу ".$task->date,
+                ]
+
+            );
+            $Letter->save();
+            echo "Сообщение отправлено: задача ".$task->name .PHP_EOL;
+        }
+        exit;
+    }
 }
