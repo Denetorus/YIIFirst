@@ -6,6 +6,7 @@ use app\models\Letters;
 use Yii;
 use app\models\Tasks;
 use app\models\TasksSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,6 +38,10 @@ class TasksController extends Controller
      */
     public function actionIndex()
     {
+
+        if( ! \Yii::$app->user->can('TaskListView')){
+            return $this->goHome();
+        };
         $searchModel = new TasksSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -48,6 +53,9 @@ class TasksController extends Controller
 
     public function actionCurrent(){
 
+        if( ! \Yii::$app->user->can('TaskListCurrentView')){
+            return $this->goHome();
+        };
 
         if (!isset(Yii::$app->request->queryParams['date'])){
             $CurrentDate = date("Y-M-d");
@@ -103,6 +111,11 @@ class TasksController extends Controller
      */
     public function actionView($id)
     {
+
+        if( ! \Yii::$app->user->can('TaskView')){
+            return $this->goHome();
+        };
+
         $model = $this->findModel($id);
         $model->file = "/img/".$model->file;
         return $this->render('view', [
@@ -117,6 +130,11 @@ class TasksController extends Controller
      */
     public function actionCreate()
     {
+
+        if( ! \Yii::$app->user->can('TaskUpdate')){
+            return $this->goHome();
+        };
+
         $model = new Tasks();
 
 
@@ -147,6 +165,10 @@ class TasksController extends Controller
      */
     public function actionUpdate($id)
     {
+        if( ! \Yii::$app->user->can('TaskUpdate')){
+            return $this->goHome();
+        };
+
         $model = $this->findModel($id);
 
         if (Yii::$app->request->isPost){
@@ -175,6 +197,10 @@ class TasksController extends Controller
      */
     public function actionDelete($id)
     {
+        if( ! \Yii::$app->user->can('TaskDelete')){
+            return $this->goHome();
+        };
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

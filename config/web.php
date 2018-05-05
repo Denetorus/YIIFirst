@@ -13,6 +13,9 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'authManager' => [
+            'class' => \yii\rbac\DbManager::class
+        ],
         'i18n' =>[
             'translations' => [
                 'msg*' => [
